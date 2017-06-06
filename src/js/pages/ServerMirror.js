@@ -1,8 +1,8 @@
 import React from 'react';
 import CustomCodeMirror from '../components/custom/CustomCodeMirror';
 import ActionBarServer from '../components/serverMirror/ActionBarServer';
-import AppDispatcher from '../AppDispatcher';
 
+require('es6-promise').polyfill();
 const axios = require('axios');
 const apiRequestTemplates = require('../data/api-request-templates');
 
@@ -10,35 +10,23 @@ class ServerMirror extends React.Component {
   constructor() {
     super();
     this.state = {
+      template: Object.keys(apiRequestTemplates)[0],
       json: this.getJsonByTemplate(Object.keys(apiRequestTemplates)[0]),
       result: '',
+      isRunning: false
     };
-    const self = this;
-    AppDispatcher.register((payload) => {
-      if (payload.actionType === 'SM_CHANGE_TEMPLATE') {
-        self.setState({
-          json: self.getJsonByTemplate(payload.data),
-          result: '',
-        });
-      }
-      if (payload.actionType === 'SM_GENERATE_INFO') {
-        self.generateInfo(payload.data);
-      }
-      if (payload.actionType === 'SM_RUN') {
-        self.run();
-      }
-    });
   }
 
-  getJsonByTemplate(template) {
-    return JSON.stringify(apiRequestTemplates[template], null, 4);
+  updateTemplate(newTemplate) {
+    this.setState({ template: newTemplate });
+    this.updateJSON(this.getJsonByTemplate(newTemplate));
   }
 
   updateJSON(newCode) {
     this.setState({ json: newCode });
   }
 
-  generateInfo(info) {
+  infoGenerateHandler(info) {
     this.setState({
       json: this.state.json
         .replace('<API_KEY>', info.apiKey)
@@ -46,24 +34,38 @@ class ServerMirror extends React.Component {
     });
   }
 
+  getJsonByTemplate(template) {
+    return JSON.stringify(apiRequestTemplates[template], null, 4);
+  }
+
   run() {
+    this.setState({ isRunning: true });
     const self = this;
     axios({
       method: 'POST',
       url: `${baseUrl}/sendAnvilRequest`,
       data: { jsonObj: this.state.json },
     }).then((res) => {
-      self.setState({ result: JSON.stringify(res.data, null, 4) });
-      AppDispatcher.dispatch({
-        actionType: 'SM_RUN_COMPLETE',
+      self.setState({
+        result: JSON.stringify(res.data, null, 4),
+        isRunning: false
       });
     });
   }
 
   render() {
+    const isRunning = this.state.isRunning;
     return (
       <div>
-        <ActionBarServer />
+        <ActionBarServer
+          template={this.state.template}
+          onTemplateChange={this.updateTemplate.bind(this)}
+          onInfoGenerate={this.infoGenerateHandler.bind(this)}
+          onRunClick={this.run.bind(this)}
+          options={{
+            isRunning
+          }}
+        />
         <div className="pane-window">
           <div className="container-code-mirror container-code-mirror-server">
             <CustomCodeMirror

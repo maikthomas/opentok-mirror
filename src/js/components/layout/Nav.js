@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 class Nav extends React.Component {
   render() {
@@ -19,5 +20,9 @@ class Nav extends React.Component {
     );
   }
 }
+
+Nav.propTypes = {
+  location: PropTypes.object
+};
 
 export default Nav;

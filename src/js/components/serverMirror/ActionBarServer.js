@@ -1,49 +1,39 @@
 import React from 'react';
-import AppDispatcher from '../../AppDispatcher';
+import PropTypes from 'prop-types';
+
+require('es6-promise').polyfill();
 const axios = require('axios');
 const apiRequestTemplates = require('../../data/api-request-templates');
 
 class ActionBarServer extends React.Component {
   constructor() {
     super();
-    this.state = {
-      loadingSessionInfo: false,
-      running: false,
-    };
-    const self = this;
-    AppDispatcher.register((payload) => {
-      if (payload.actionType === 'SM_RUN') {
-        self.setState({ running: true });
-      }
-      if (payload.actionType === 'SM_RUN_COMPLETE') {
-        self.setState({ running: false });
-      }
-    });
-    this.templateItems = Object.keys(apiRequestTemplates).map((key, index) => <option key={key} value={key}>{key}</option>);
+    this.state = { isLoadingAuthToken: false };
+    this.templateItems = Object.keys(apiRequestTemplates).map((key, index) =>
+      <option key={key} value={key}>{key}</option>
+    );
   }
 
   changeTemplateHandler(event) {
-    AppDispatcher.dispatch({
-      actionType: 'SM_CHANGE_TEMPLATE',
-      data: event.target.value,
-    });
+    if(this.props.onTemplateChange) {
+      this.props.onTemplateChange(event.target.value);
+    }
   }
 
   runClickHandler() {
-    AppDispatcher.dispatch({
-      actionType: 'SM_RUN',
-    });
+    if(this.props.onRunClick) {
+      this.props.onRunClick();
+    }
   }
 
-  fillAuthClickHandler() {
-    this.setState({ loadingSessionInfo: true });
+  generateAuthTokenClickHandler() {
+    this.setState({ isLoadingAuthToken: true });
     axios.post(`${baseUrl}/jwt-token`)
       .then((res) => {
-        AppDispatcher.dispatch({
-          actionType: 'SM_GENERATE_INFO',
-          data: res.data,
-        });
-        this.setState({ loadingSessionInfo: false });
+        if(this.props.onInfoGenerate) {
+          this.props.onInfoGenerate(res.data);
+        }
+        this.setState({ isLoadingAuthToken: false });
       });
   }
 
@@ -52,21 +42,21 @@ class ActionBarServer extends React.Component {
       <div className="action-bar">
         <div className="sdk-version">
           <span>API Request Template</span>
-          <select name="version" onChange={this.changeTemplateHandler.bind(this)}>
+          <select name="version" value={this.template} onChange={this.changeTemplateHandler.bind(this)}>
             {this.templateItems}
           </select>
         </div>
         <button className="btn" onClick={this.runClickHandler.bind(this)}>
           &#x25b7; Run
           <span
-            style={{ display: this.state.running ? 'inline-block' : 'none' }}
+            style={{ display: this.props.options.isRunning ? 'inline-block' : 'none' }}
             className="glyphicon glyphicon-refresh spinning"
           />
         </button>
-        <button className="btn" onClick={this.fillAuthClickHandler.bind(this)}>
+        <button className="btn" onClick={this.generateAuthTokenClickHandler.bind(this)}>
           Generate Auth Token
           <span
-            style={{ display: this.state.loadingSessionInfo ? 'inline-block' : 'none' }}
+            style={{ display: this.state.isLoadingAuthToken ? 'inline-block' : 'none' }}
             className="glyphicon glyphicon-refresh spinning"
           />
         </button>
@@ -74,5 +64,13 @@ class ActionBarServer extends React.Component {
     );
   }
 }
+
+ActionBarServer.propTypes = {
+  template: PropTypes.string,
+  options: PropTypes.object,
+  onTemplateChange: PropTypes.func,
+  onRunClick: PropTypes.func,
+  onInfoGenerate: PropTypes.func
+};
 
 export default ActionBarServer;

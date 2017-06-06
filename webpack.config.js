@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = {
   context: path.join(__dirname, 'src'),
-  devtool: debug ? 'inline-sourcemap' : null,
+  devtool: debug ? 'inline-sourcemap' : false,
   entry: './js/App.js',
   module: {
     loaders: [
@@ -25,7 +25,11 @@ module.exports = {
   },
   watch: debug,
   plugins: debug ? [] : [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin()
   ],
 };

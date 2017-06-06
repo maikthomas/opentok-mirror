@@ -1,5 +1,5 @@
 {
-  "html": "<div id=\"publisher\">\n<div id=\"subscriber\">",
+  "html": "<div id=\"publisher\"></div>\n<div id=\"subscriber\"></div>",
 
   "javascript": "var props = {width: '100%', height: '100%'};\nOT.initPublisher('publisher', props);",
   

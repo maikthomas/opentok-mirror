@@ -1,67 +1,69 @@
 import React from 'react';
-import AppDispatcher from '../../AppDispatcher';
+import PropTypes from 'prop-types';
 
 class ResultPane extends React.Component {
-  constructor() {
-    super();
-    const self = this;
-    AppDispatcher.register((payload) => {
-      if (payload.actionType === 'CM_CHANGE_SDK') {
-        if (self.body) {
-          self.changeSdkHandler(payload.data);
-        } else {
-          self.sdkDefaultVersion = payload.data;
-        }
-      }
-      if (payload.actionType === 'CM_RUN') {
-        self.displayResult();
-      }
-    });
+  constructor(props) {
+    super(props);
+    this.state = {
+      sdkValue: props.sdkValue,
+      result: props.result
+    }
   }
 
-  changeSdkHandler(version) {
-    if (this.scriptOT) {
-      this.body.removeChild(this.scriptOT);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sdkValue !== this.state.sdkValue) {
+      this.setState({ sdkValue: nextProps.sdkValue }, this.changeSdkHandler);
     }
-    this.scriptOT = document.createElement('script');
-    this.scriptOT.setAttribute('src', `https://static.opentok.com/v${version}/js/opentok.js`);
-    this.body.appendChild(this.scriptOT);
+    if (nextProps.result !== this.state.result) {
+      this.setState({ result: nextProps.result }, this.displayResult);
+    }
+  }
+
+  frameLoadHandler() {
+    this.head = this.frame.contentDocument.head;
+    this.changeSdkHandler();
+  }
+
+  changeSdkHandler() {
+    const scriptOT = document.createElement('script');
+    scriptOT.setAttribute('src',
+      `https://static.opentok.com/v${this.state.sdkValue}/js/opentok.min.js`
+    );
+    this.head.innerHTML = '';
+    this.head.appendChild(scriptOT);
   }
 
   displayResult() {
-    if (this.html) {
+    if(this.body) {
       this.body.removeChild(this.html);
-    }
-    if (this.style) {
       this.body.removeChild(this.style);
-    }
-    if (this.script) {
       this.body.removeChild(this.script);
+    } else {
+      this.body = this.frame.contentDocument.body;
     }
-
     this.html = document.createElement('div');
+    this.html.innerHTML = this.state.result.html;
+
     this.style = document.createElement('style');
+    this.style.innerHTML = this.state.result.css;
+    
     this.script = document.createElement('script');
-
-    this.html.innerHTML = this.props.html;
-    this.style.innerHTML = this.props.css;
-    this.script.innerHTML = this.props.javascript;
-
+    this.script.innerHTML = this.state.result.javascript;
+    
     this.body.appendChild(this.html);
     this.body.appendChild(this.style);
     this.body.appendChild(this.script);
   }
 
-  componentDidMount() {
-    this.iframe = document.getElementsByTagName('iframe')[0];
-    this.body = this.iframe.contentDocument.getElementsByTagName('body')[0];
-    this.changeSdkHandler(this.sdkDefaultVersion);
-  }
-
   render() {
     return (
       <div className={this.props.className}>
-        <iframe className="frame" />
+        <iframe
+          src={`${baseUrl}/html/frame.html`}
+          className="frame"
+          ref={(el) => (this.frame = el)}
+          onLoad={this.frameLoadHandler.bind(this)}
+        />
         <span className="pane-name">
           {this.props.name}
         </span>
@@ -69,5 +71,10 @@ class ResultPane extends React.Component {
     );
   }
 }
+
+ResultPane.propTypes = {
+  sdkValue: PropTypes.string,
+  result: PropTypes.object
+};
 
 export default ResultPane;

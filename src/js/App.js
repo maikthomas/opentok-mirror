@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import Layout from './pages/Layout';
 import ClientMirror from './pages/ClientMirror';
 import ServerMirror from './pages/ServerMirror';
@@ -12,4 +12,5 @@ ReactDOM.render(
       <Route path="/server-mirror" component={ServerMirror} />
     </Layout>
   </HashRouter>,
-document.getElementById('appContainer'));
+  document.getElementById('appContainer')
+);

@@ -2,19 +2,24 @@ import React from 'react';
 import CustomCodeMirror from '../components/custom/CustomCodeMirror';
 import ActionBar from '../components/clientMirror/ActionBar';
 import ResultPane from '../components/clientMirror/ResultPane';
-import AppDispatcher from '../AppDispatcher';
+
 const initialState = require('../data/client-mirror-initial-state');
+const jsSdkVersions = require('../data/js-sdk-versions');
 
 class ClientMirror extends React.Component {
   constructor() {
     super();
-    this.state = initialState;
-    const self = this;
-    AppDispatcher.register((payload) => {
-      if (payload.actionType === 'CM_GENERATE_INFO') {
-        self.generateInfo(payload.data);
-      }
-    });
+    this.state = {
+      sdk: jsSdkVersions[0].value,
+      html: initialState.html,
+      javascript: initialState.javascript,
+      css: initialState.css,
+      result: {}
+    };
+  }
+
+  updateSDK(newSdk) {
+    this.setState({ sdk: newSdk });
   }
 
   updateHTML(newCode) {
@@ -29,7 +34,7 @@ class ClientMirror extends React.Component {
     this.setState({ css: newCode });
   }
 
-  generateInfo(info) {
+  infoGenerateHandler(info) {
     this.setState({
       javascript:
         `${`var apiKey = ${info.apiKey};\n` +
@@ -39,10 +44,26 @@ class ClientMirror extends React.Component {
     });
   }
 
+  run() {
+    this.setState({ result: {
+      html: this.state.html,
+      javascript: this.state.javascript,
+      css: this.state.css
+    }});
+  }
+
   render() {
     return (
       <div>
-        <ActionBar />
+        <ActionBar
+          sdk={this.state.sdk}
+          onSdkChange={this.updateSDK.bind(this)}
+          onInfoGenerate={this.infoGenerateHandler.bind(this)}
+          onRunClick={this.run.bind(this)}
+          options={{
+            isRunning: false
+          }}
+        />
         <div className="pane-window">
           <div className="container-code-mirror">
             <CustomCodeMirror
@@ -77,9 +98,8 @@ class ClientMirror extends React.Component {
             <ResultPane
               className="result-pane"
               name="Result"
-              html={this.state.html}
-              javascript={this.state.javascript}
-              css={this.state.css}
+              sdkValue={this.state.sdk}
+              result={this.state.result}
             />
           </div>
         </div>
