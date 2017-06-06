@@ -1,0 +1,7 @@
+{
+  "html": "<div id=\"publisher\">\n<div id=\"subscriber\">",
+
+  "javascript": "var props = {width: '100%', height: '100%'};\nOT.initPublisher('publisher', props);",
+  
+  "css": "body {\n  margin: 0px;\n}"
+}

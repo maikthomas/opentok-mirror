@@ -1,0 +1,133 @@
+html, body {
+  background-color: #efefef;
+}
+
+#main-nav .bottom {
+  background-color: #303030
+  height: 59px;
+}
+
+#main-nav .bottom .logo img {
+  width: 113px;
+  height: 30px;
+  margin-top: 16px;
+}
+
+.main-container {
+  display: inline-block;
+  position: relative;
+  top: 59px;
+  width: 100%;
+  padding: 47px 208px 59px 208px;
+  box-sizing: border-box;
+  margin-bottom: 135px;
+}
+
+@media (max-width: 1024px) {
+  .main-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 1128px) {
+  .main-container {
+    padding-left: 52px;
+    padding-right: 52px;
+  }
+}
+
+@media (max-width: 1232px) {
+  .main-container {
+    padding-left: 104px;
+    padding-right: 104px;
+  }
+}
+
+.main-container > header {
+  margin: 0 auto;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, rgba(2,167,211,1) 0%, rgba(5,140,197,1) 100%);
+  border: 1px solid #008ac4;
+  max-width: 1024px;
+  min-width: 848px;
+  padding: 21px 29px;
+  box-sizing: border-box;
+}
+
+.main-container > header h1 {
+  font-family: Muli;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 41px;
+  margin: 0 0 9px 0;
+  color: #FFF;
+}
+
+.main-container > header h1 sup {
+  font-size: 14px;
+  color: #9ce6ff;
+  padding-left: 10px;
+  vertical-align: top;
+}
+
+.main-container > header hr {
+  opacity: 0.3;
+  border: 0;
+  border-bottom-width: 1px;
+  border-bottom-color: #ffffff;
+  border-bottom-style: solid;
+  width: 100%;
+  margin-top: 18px;
+  margin-bottom: 16px;
+}
+
+.main-container > header h3 {
+  font-family: Muli;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.3px;
+  margin: 0;
+  color: #82d0e8;
+}
+
+.main-container > section {
+  background-color: #fff;
+  max-width: 1024px;
+  min-width: 848px;
+  padding: 0;
+}
+
+.main-container section {
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 1px solid #ced7db;
+  box-sizing: border-box;
+}
+
+select {
+  background-image: url(../img/icons/dropdown_arrow.png);
+  background-repeat: no-repeat;
+  background-position: 92% center;
+  background-color: #fff;
+  padding: 10px;
+  padding-right: 60px;
+  border-radius: 4px;
+  border: solid 1px rgba(0, 0, 0, 0.2);
+  height: 40px;
+  font-size: 13px;
+  width: auto;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.glyphicon.spinning {
+  animation: spin 1s infinite linear;
+  margin-left: 5px;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

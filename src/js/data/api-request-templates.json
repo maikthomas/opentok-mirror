@@ -1,0 +1,71 @@
+{
+  "Session - Create": {
+  	"method": "POST",
+    "url": "https://api.opentok.com/session/create",
+    "headers": {
+      "X-OPENTOK-AUTH": "<JWT_TOKEN>"
+    },
+    "data": {
+      "p2p.preference": "disabled"
+    }
+  },
+  "Archive - Start": {
+  	"method": "POST",
+    "url": "https://api.opentok.com/v2/project/<API_KEY>/archive",
+    "headers": {
+      "Content-Type": "application/json",
+      "X-OPENTOK-AUTH": "<JWT_TOKEN>"
+    },
+    "data": {
+      "sessionId" : "<SESSION_ID>",
+      "hasAudio" : true,
+      "hasVideo" : true,
+      "name" : "archive_name",
+      "outputMode" : "composed"
+    }
+  },
+  "Archive - Stop": {
+  	"method": "POST",
+    "url": "https://api.opentok.com/v2/project/<API_KEY>/archive/<ARCHIVE_ID>/stop",
+    "headers": {
+      "X-OPENTOK-AUTH": "<JWT_TOKEN>"
+    }
+  },
+  "Archive - List": {
+  	"method": "GET",
+    "url": "https://api.opentok.com/v2/project/<API_KEY>/archive",
+    "headers": {
+      "X-OPENTOK-AUTH": "<JWT_TOKEN>"
+    }
+  },
+  "Archive - Retrieve": {
+  	"method": "GET",
+    "url": "https://api.opentok.com/v2/project/<API_KEY>/archive/<ARCHIVE_ID>",
+    "headers": {
+      "X-OPENTOK-AUTH": "<JWT_TOKEN>"
+    }
+  },
+  "SIP - Dial": {
+  	"method": "POST",
+    "url": "https://api.opentok.com/v2/project/<API_KEY>/dial",
+    "headers": {
+      "Content-Type": "application/json",
+      "X-OPENTOK-AUTH": "<JWT_TOKEN>"
+    },
+    "data": {
+      "sessionId": "OpenTok session ID",
+      "token": "A valid OpenTok token",
+      "sip": {
+  	    "uri": "user@sip.partner.com;transport=tls",
+  	    "headers": {
+  	      "headerKey": "headerValue"
+  	    },
+  	    "auth": {
+  	      "username": "username",
+  	      "password": "password"
+  	    },
+  	    "secure": true
+  	  }
+    }
+  }
+}

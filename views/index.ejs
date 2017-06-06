@@ -1,0 +1,16 @@
+<%- contentFor('headerTags') %>
+<link rel="stylesheet" href="<%= baseUrl %>/css/index.css" />
+<script>
+  var baseUrl = '<%= baseUrl %>';
+</script>
+
+<%- contentFor('mainContent') %>
+<header>
+  <h1>The OpenTok Mirror</h1>
+  <h3>A tool for exploring OpenTok platform capabilities</h3>
+</header>
+
+<section id="page-content">
+  <div id="appContainer"></div>
+  <script src="<%= baseUrl %>/js/app.min.js"></script>
+</section>
