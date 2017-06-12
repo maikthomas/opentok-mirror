@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 
 require('es6-promise').polyfill();
 const axios = require('axios');
@@ -57,6 +58,13 @@ class ActionBar extends React.Component {
           Generate Session Info
           <span
             style={{ display: this.state.isLoadingSessionInfo ? 'inline-block' : 'none' }}
+            className="glyphicon glyphicon-refresh spinning"
+          />
+        </button>
+        <button className="btn" onClick={() => {this.props.onSaveClick()}}>
+          <FaFloppyO /> Save
+          <span
+            style={{ display: this.props.options.isRunning ? 'inline-block' : 'none' }}
             className="glyphicon glyphicon-refresh spinning"
           />
         </button>
