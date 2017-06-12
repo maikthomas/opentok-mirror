@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const OpenTok = require('opentok');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const rand = require("random-key");
 
 const app = express();
 const apiKey = process.env.API_KEY || 100;
@@ -26,6 +27,28 @@ app.get('/', (req, res) => {
   res.render('index', {
     baseUrl,
   });
+});
+
+app.get('/client-mirror/:mirrorId', (req, res) => {
+  /*
+  TODO: RETRIEVE DATA HERE
+   */
+  res.send(JSON.stringify({
+    javascript: 'var props = {width: \'100%\', height: \'100%\'};\nOT.initPublisher(\'publisher\', props);',
+    html: '<div id="publisher"></div>\n<div id="subscriber"></div>',
+    css: 'body {\n  margin: 0px;\n}',
+    sdk: '2.11'
+  }));
+});
+
+app.post('/client-mirror', (req, res) => {
+    //TODO: Ensure ID is unique
+    let mirrorId;
+    mirrorId = rand.generate(8);
+    //TODO: Save fields in redis
+    console.log(req.body.sdk, req.body.javascript, req.body.css, req.body.html)
+
+    res.send(mirrorId);
 });
 
 app.post('/session', (req, res) => {

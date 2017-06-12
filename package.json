@@ -18,6 +18,7 @@
     "jsonwebtoken": "^7.4.1",
     "opentok": "^2.5.0",
     "path": "^0.12.7",
+    "random-key": "^0.3.2",
     "react": "^15.5.4",
     "react-codemirror": "git://github.com/skidding/react-codemirror.git#106-fix-update",
     "react-dom": "^15.5.4",
