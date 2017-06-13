@@ -20,6 +20,9 @@ class ClientMirror extends React.Component {
       isRunning: false,
       isSaving: false
     };
+    if (this.props.match.params.mirrorId) {
+      this.setSavedState(this.props.match.params.mirrorId);
+    }
   }
 
   setSavedState(mirrorId) {
@@ -61,8 +64,11 @@ class ClientMirror extends React.Component {
   }
 
   save() {
-    this.setState({ isSaving: true });
-    axios.post(`${baseUrl}/client-mirror`, this.state)
+    axios.post(`${baseUrl}/client-mirror`, {
+      sdk: this.state.sdk,
+      javascript: this.state.javascript,
+      html: this.state.html,
+      css: this.state.css})
       .then((response) => {
         this.props.history.push(`/client-mirror/${response.data}`);
         this.setState({ isSaving: false });
@@ -80,7 +86,7 @@ class ClientMirror extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params.mirrorId !== nextProps.match.params.mirrorId) {
       if (nextProps.match.params.mirrorId) {
-        this.setSavedState(this.props.match.params.mirrorId);
+        this.setSavedState(nextProps.match.params.mirrorId);
       }
     }
   }
