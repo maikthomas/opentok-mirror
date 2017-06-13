@@ -79,7 +79,7 @@ class ServerMirror extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params.mirrorId !== nextProps.match.params.mirrorId) {
-      if (nextProps.match.params.mirrorId) {
+      if (nextProps.match.params.mirrorId && !this.state.isSaving) {
         this.setSavedState(nextProps.match.params.mirrorId);
       }
     }
