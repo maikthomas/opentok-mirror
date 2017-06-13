@@ -1,2 +1,5 @@
 node_modules
 .DS_Store
+
+# Build File
+/public/js/app.min.js
