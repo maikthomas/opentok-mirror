@@ -64,6 +64,7 @@ class ClientMirror extends React.Component {
   }
 
   save() {
+    this.setState({ isSaving: true });
     axios.post(`${baseUrl}/client-mirror`, {
       sdk: this.state.sdk,
       javascript: this.state.javascript,
