@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const OpenTok = require('opentok');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const rand = require("random-key");
+const redis = require('./redisUtil')
 
 const app = express();
 const apiKey = process.env.API_KEY || 100;
@@ -30,25 +30,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/client-mirror/:mirrorId', (req, res) => {
-  /*
-  TODO: RETRIEVE DATA HERE
-   */
-  res.send(JSON.stringify({
-    javascript: 'var props = {width: \'100%\', height: \'100%\'};\nOT.initPublisher(\'publisher\', props);',
-    html: '<div id="publisher"></div>\n<div id="subscriber"></div>',
-    css: 'body {\n  margin: 0px;\n}',
-    sdk: '2.11'
-  }));
+  redis.getClientMirror(req.params.mirrorId)
+  .then((data) => {
+    res.send(JSON.stringify(data));
+  });
 });
 
 app.post('/client-mirror', (req, res) => {
-    //TODO: Ensure ID is unique
-    let mirrorId;
-    mirrorId = rand.generate(8);
-    //TODO: Save fields in redis
-    console.log(req.body.sdk, req.body.javascript, req.body.css, req.body.html)
-
-    res.send(mirrorId);
+    redis.setClientMirror(req.body)
+      .then((mirrorId) => res.send(mirrorId));
 });
 
 app.get('/session', (req, res) => {
