@@ -11,9 +11,11 @@ const clientMirrorPrefix = 'clientmirror';
 const serverMirrorPrefix = 'servermirror';
 
 
-const getUniqueId= () => {
-  return rand.generate(8);
-}
+const getUniqueId = (prefix) => {
+  id = rand.generate(8);
+  return client.existsAsync(`${prefix}:${id}`)
+    .then(res => res === 0 ? id : getUniqueId(prefix));
+  }
 
 module.exports = {
   getClientMirror: (id) => {
@@ -23,11 +25,14 @@ module.exports = {
   },
 
   setClientMirror: (data) => {
-    const id = getUniqueId();
-    return client.hmsetAsync(`${clientMirrorPrefix}:${id}`,
-      'sdk', data.sdk,
-      'javascript', data.javascript,
-      'css', data.css,
-      'html', data.html).then((err, res) => id);
+    let id;
+    return getUniqueId(clientMirrorPrefix).then(uniqueId => {
+      id = uniqueId;
+      return client.hmsetAsync(`${clientMirrorPrefix}:${id}`,
+        'sdk', data.sdk,
+        'javascript', data.javascript,
+        'css', data.css,
+        'html', data.html).then((err, res) => id);
+      });
   }
 }
