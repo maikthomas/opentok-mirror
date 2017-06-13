@@ -22,7 +22,6 @@
     "react": "^15.5.4",
     "react-codemirror": "git://github.com/skidding/react-codemirror.git#106-fix-update",
     "react-dom": "^15.5.4",
-    "react-icons": "^2.2.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "style-loader": "^0.18.2",

@@ -2,19 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class ResultPane extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sdkValue: props.sdkValue,
-      result: props.result
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
-    if (nextProps.sdkValue !== this.state.sdkValue) {
+    if (nextProps.sdkValue !== this.props.sdkValue) {
       this.setState({ sdkValue: nextProps.sdkValue }, this.changeSdkHandler);
     }
-    if (nextProps.result !== this.state.result) {
+    if (nextProps.result !== this.props.result) {
       this.setState({ result: nextProps.result }, this.displayResult);
     }
   }
@@ -27,7 +19,7 @@ class ResultPane extends React.Component {
   changeSdkHandler() {
     const scriptOT = document.createElement('script');
     scriptOT.setAttribute('src',
-      `https://static.opentok.com/v${this.state.sdkValue}/js/opentok.min.js`
+      `https://static.opentok.com/v${this.props.sdkValue}/js/opentok.min.js`
     );
     this.head.innerHTML = '';
     this.head.appendChild(scriptOT);
@@ -42,13 +34,13 @@ class ResultPane extends React.Component {
       this.body = this.frame.contentDocument.body;
     }
     this.html = document.createElement('div');
-    this.html.innerHTML = this.state.result.html;
+    this.html.innerHTML = this.props.result.html;
 
     this.style = document.createElement('style');
-    this.style.innerHTML = this.state.result.css;
+    this.style.innerHTML = this.props.result.css;
     
     this.script = document.createElement('script');
-    this.script.innerHTML = this.state.result.javascript;
+    this.script.innerHTML = this.props.result.javascript;
     
     this.body.appendChild(this.html);
     this.body.appendChild(this.style);

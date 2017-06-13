@@ -51,7 +51,7 @@ app.post('/client-mirror', (req, res) => {
     res.send(mirrorId);
 });
 
-app.post('/session', (req, res) => {
+app.get('/session', (req, res) => {
   opentok.createSession((err, session) => {
     if (err) {
       res.send(err);
@@ -65,7 +65,7 @@ app.post('/session', (req, res) => {
   });
 });
 
-app.post('/jwt-token', (req, res) => {
+app.get('/jwt-token', (req, res) => {
   const currentTime = Math.floor(new Date() / 1000);
   const token = jwt.sign({
     iss: apiKey,

@@ -13,7 +13,8 @@ class ServerMirror extends React.Component {
       template: Object.keys(apiRequestTemplates)[0],
       json: this.getJsonByTemplate(Object.keys(apiRequestTemplates)[0]),
       result: '',
-      isRunning: false
+      isRunning: false,
+      isSaving: false
     };
   }
 
@@ -40,21 +41,25 @@ class ServerMirror extends React.Component {
 
   run() {
     this.setState({ isRunning: true });
-    const self = this;
     axios({
       method: 'POST',
       url: `${baseUrl}/sendAnvilRequest`,
       data: { jsonObj: this.state.json },
     }).then((res) => {
-      self.setState({
+      this.setState({
         result: JSON.stringify(res.data, null, 4),
         isRunning: false
       });
     });
   }
 
+  save() {
+    this.setState({ isSaving: true });
+  }
+
   render() {
     const isRunning = this.state.isRunning;
+    const isSaving = this.state.isSaving;
     return (
       <div>
         <ActionBarServer
@@ -62,8 +67,10 @@ class ServerMirror extends React.Component {
           onTemplateChange={this.updateTemplate.bind(this)}
           onInfoGenerate={this.infoGenerateHandler.bind(this)}
           onRunClick={this.run.bind(this)}
+          onSaveClick={this.save.bind(this)}
           options={{
-            isRunning
+            isRunning,
+            isSaving
           }}
         />
         <div className="pane-window">

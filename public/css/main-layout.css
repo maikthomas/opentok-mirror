@@ -126,12 +126,17 @@ select {
 select::-ms-expand {
   display: none;
 }
-
+.glyphicon {
+  margin-right: 5px;
+ } 
 .glyphicon.spinning {
   animation: spin 1s infinite linear;
-  margin-left: 5px;
 }
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.btn-large {
+  padding: 0 22px !important;
 }

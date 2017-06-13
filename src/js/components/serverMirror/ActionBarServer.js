@@ -26,9 +26,15 @@ class ActionBarServer extends React.Component {
     }
   }
 
+  saveClickHandler() {
+    if(this.props.onSaveClick) {
+      this.props.onSaveClick();
+    }
+  }
+
   generateAuthTokenClickHandler() {
     this.setState({ isLoadingAuthToken: true });
-    axios.post(`${baseUrl}/jwt-token`)
+    axios.get(`${baseUrl}/jwt-token`)
       .then((res) => {
         if(this.props.onInfoGenerate) {
           this.props.onInfoGenerate(res.data);
@@ -47,18 +53,19 @@ class ActionBarServer extends React.Component {
           </select>
         </div>
         <button className="btn" onClick={this.runClickHandler.bind(this)}>
-          &#x25b7; Run
-          <span
-            style={{ display: this.props.options.isRunning ? 'inline-block' : 'none' }}
-            className="glyphicon glyphicon-refresh spinning"
-          />
+          <span className={'glyphicon ' + (this.props.options.isRunning ?
+            'glyphicon-refresh spinning' : 'glyphicon-play')}
+          /> Run
         </button>
-        <button className="btn" onClick={this.generateAuthTokenClickHandler.bind(this)}>
-          Generate Auth Token
-          <span
-            style={{ display: this.state.isLoadingAuthToken ? 'inline-block' : 'none' }}
-            className="glyphicon glyphicon-refresh spinning"
-          />
+        <button className="btn" onClick={this.saveClickHandler.bind(this)}>
+          <span className={'glyphicon ' + (this.props.options.isSaving ?
+            'glyphicon-refresh spinning' : 'glyphicon-copy')}
+          /> Save
+        </button>
+        <button className="btn btn-large" onClick={this.generateAuthTokenClickHandler.bind(this)}>
+          <span className={'glyphicon ' + (this.state.isLoadingAuthToken ?
+            'glyphicon-refresh spinning' : 'glyphicon-plus')}
+          /> Generate Token
         </button>
       </div>
     );

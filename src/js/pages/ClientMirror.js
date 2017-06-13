@@ -16,21 +16,10 @@ class ClientMirror extends React.Component {
       html: initialState.html,
       javascript: initialState.javascript,
       css: initialState.css,
-      result: {}
+      result: {},
+      isRunning: false,
+      isSaving: false
     };
-    if (this.props.match.params.mirrorId) {
-      this.setSavedState(this.props.match.params.mirrorId);
-    }
-  }
-
-  setInitialState() {
-    this.setState({
-        sdk: jsSdkVersions[0].value,
-        html: initialState.html,
-        javascript: initialState.javascript,
-        css: initialState.css,
-        result: {}
-      });
   }
 
   setSavedState(mirrorId) {
@@ -40,11 +29,9 @@ class ClientMirror extends React.Component {
           sdk: response.data.sdk,
           html: response.data.html,
           javascript: response.data.javascript,
-          css: response.data.css,
-          result: {}
+          css: response.data.css
         });
-      })
-      .catch((error) => console.log(error));
+      });
   }
 
   updateSDK(newSdk) {
@@ -74,11 +61,12 @@ class ClientMirror extends React.Component {
   }
 
   save() {
+    this.setState({ isSaving: true });
     axios.post(`${baseUrl}/client-mirror`, this.state)
       .then((response) => {
-          this.props.history.push(`/client-mirror/${response.data}`);
-      })
-      .catch((error) => console.log(error));
+        this.props.history.push(`/client-mirror/${response.data}`);
+        this.setState({ isSaving: false });
+      });
   }
 
   run() {
@@ -91,15 +79,15 @@ class ClientMirror extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params.mirrorId !== nextProps.match.params.mirrorId) {
-      if (nextProps.match.params.mirrorId){
+      if (nextProps.match.params.mirrorId) {
         this.setSavedState(this.props.match.params.mirrorId);
-      } else {
-        this.setInitialState();
       }
     }
   }
 
   render() {
+    const isRunning = this.state.isRunning;
+    const isSaving = this.state.isSaving;
     return (
       <div>
         <ActionBar
@@ -109,7 +97,8 @@ class ClientMirror extends React.Component {
           onRunClick={this.run.bind(this)}
           onSaveClick={this.save.bind(this)}
           options={{
-            isRunning: false
+            isRunning: isRunning,
+            isSaving: isSaving
           }}
         />
         <div className="pane-window">

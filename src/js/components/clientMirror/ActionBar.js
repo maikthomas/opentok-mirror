@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FaFloppyO from 'react-icons/lib/fa/floppy-o';
 
 require('es6-promise').polyfill();
 const axios = require('axios');
@@ -27,9 +26,15 @@ class ActionBar extends React.Component {
     }
   }
 
+  saveClickHandler() {
+    if(this.props.onSaveClick) {
+      this.props.onSaveClick();
+    }
+  }
+
   generateSessionInfoClickHandler() {
     this.setState({ isLoadingSessionInfo: true });
-    axios.post(`${baseUrl}/session`)
+    axios.get(`${baseUrl}/session`)
       .then((res) => {
         if(this.props.onInfoGenerate) {
           this.props.onInfoGenerate(res.data);
@@ -48,25 +53,19 @@ class ActionBar extends React.Component {
           </select>
         </div>
         <button className="btn" onClick={this.runClickHandler.bind(this)}>
-          &#x25b7; Run
-          <span
-            style={{ display: this.props.options.isRunning ? 'inline-block' : 'none' }}
-            className="glyphicon glyphicon-refresh spinning"
-          />
+          <span className={'glyphicon ' + (this.props.options.isRunning ?
+            'glyphicon-refresh spinning' : 'glyphicon-play')}
+          /> Run
         </button>
-        <button className="btn" onClick={this.generateSessionInfoClickHandler.bind(this)}>
-          Generate Session Info
-          <span
-            style={{ display: this.state.isLoadingSessionInfo ? 'inline-block' : 'none' }}
-            className="glyphicon glyphicon-refresh spinning"
-          />
+        <button className="btn" onClick={this.saveClickHandler.bind(this)}>
+          <span className={'glyphicon ' + (this.props.options.isSaving ?
+            'glyphicon-refresh spinning' : 'glyphicon-copy')}
+          /> Save
         </button>
-        <button className="btn" onClick={() => {this.props.onSaveClick()}}>
-          <FaFloppyO /> Save
-          <span
-            style={{ display: this.props.options.isRunning ? 'inline-block' : 'none' }}
-            className="glyphicon glyphicon-refresh spinning"
-          />
+        <button className="btn btn-large" onClick={this.generateSessionInfoClickHandler.bind(this)}>
+          <span className={'glyphicon ' + (this.state.isLoadingSessionInfo ?
+            'glyphicon-refresh spinning' : 'glyphicon-plus')}
+          /> Generate Session
         </button>
       </div>
     );
